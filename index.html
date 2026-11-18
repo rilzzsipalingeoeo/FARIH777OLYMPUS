@@ -1,0 +1,996 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FARIH777 OLYMPUS - Arcade</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap');
+
+*{box-sizing:border-box}
+
+:root{
+ --gold:#ffcf52;
+ --purple:#9c55ff;
+ --cyan:#45eaff;
+ --red:#ff365d;
+}
+
+body{
+ margin:0;
+ min-height:100vh;
+ color:white;
+ font-family:'Rajdhani',sans-serif;
+ background:#17264a url('olympus-bg.png') center top / cover fixed no-repeat;
+ overflow-x:hidden;
+}
+
+body:before{
+ content:"";
+ position:fixed;
+ inset:0;
+ pointer-events:none;
+ background:linear-gradient(180deg,rgba(9,18,43,.34),rgba(12,20,43,.54) 48%,rgba(8,13,31,.78));
+}
+
+.container{
+ position:relative;
+ z-index:1;
+ width:min(100%,620px);
+ margin:auto;
+ padding:25px 17px 35px;
+}
+
+.topbar{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ border-bottom:1px solid #ffffff20;
+ padding-bottom:15px;
+}
+
+.logo{
+ font-family:Orbitron;
+ font-weight:900;
+ font-size:21px;
+ color:var(--gold);
+ letter-spacing:2px;
+ text-shadow:0 0 15px #ffb52c;
+}
+
+.live{
+ font-size:12px;
+ color:#7cffba;
+ letter-spacing:2px;
+}
+
+.hero{
+ text-align:center;
+ padding:30px 0 20px;
+}
+
+.hero h1{
+ font-family:Orbitron;
+ font-size:clamp(35px,9vw,55px);
+ margin:0;
+ font-weight:900;
+ background:linear-gradient(180deg,#fff5b0,#ffb52d 60%,#e56b19);
+ -webkit-background-clip:text;
+ color:transparent;
+ filter:drop-shadow(0 4px 12px #ffb52d66);
+}
+
+.hero p{
+ color:#aaa9c5;
+ letter-spacing:3px;
+ font-size:12px;
+ margin:10px 0;
+}
+
+.badge{
+ display:inline-block;
+ padding:6px 15px;
+ border:1px solid #b47aff66;
+ border-radius:30px;
+ color:#c99aff;
+ background:#8b42ff13;
+ font-size:12px;
+ letter-spacing:2px;
+}
+
+/* MACHINE */
+
+.machine{
+ position:relative;
+ padding:7px;
+ border-radius:25px;
+ background:linear-gradient(135deg,#ffdb70,#6c3fbd 30%,#17234b 65%,#ffb83e);
+ box-shadow:
+ 0 0 20px #a05aff66,
+ 0 0 60px #6736aa33,
+ 0 20px 40px #000a;
+}
+
+.machine-inner{
+ border-radius:19px;
+ padding:23px 15px;
+ background:linear-gradient(145deg,#252043,#101225 60%,#1c1839);
+ border:1px solid #ffffff22;
+}
+
+.machine-top{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ margin-bottom:20px;
+}
+
+.machine-title{
+ font-family:Orbitron;
+ color:var(--gold);
+ font-size:13px;
+ letter-spacing:2px;
+}
+
+.machine-label{
+ font-size:10px;
+ color:#8b8ca9;
+ letter-spacing:2px;
+}
+
+.lights{
+ display:flex;
+ justify-content:center;
+ gap:12px;
+ margin-bottom:18px;
+}
+
+.light{
+ width:9px;
+ height:9px;
+ border-radius:50%;
+ background:#ffd45b;
+ box-shadow:0 0 12px #ffd45b;
+ animation:blink .5s infinite alternate;
+}
+
+.light:nth-child(2n){
+ animation-delay:.3s;
+}
+
+@keyframes blink{
+ to{opacity:.2;transform:scale(.7)}
+}
+
+.reels{
+ display:flex;
+ gap:9px;
+ justify-content:center;
+ padding:13px;
+ border-radius:17px;
+ background:#070918;
+ border:2px solid #ffffff22;
+ box-shadow:inset 0 0 25px #000;
+}
+
+.reel{
+ height:115px;
+ flex:1;
+ max-width:150px;
+ display:grid;
+ place-items:center;
+ border-radius:12px;
+ background:linear-gradient(180deg,#fff,#c8cce0 48%,#fff);
+ color:#19172a;
+ font-size:clamp(45px,13vw,72px);
+ font-weight:900;
+ text-shadow:0 3px 0 #aaa;
+ box-shadow:inset 0 0 0 3px #8589a9;
+}
+
+.spinning{
+ animation:roll .08s infinite alternate;
+}
+
+@keyframes roll{
+ to{transform:translateY(5px);filter:blur(2px)}
+}
+
+.machine-bottom{
+ display:flex;
+ justify-content:space-between;
+ margin-top:17px;
+ color:#aaaac6;
+ font-size:12px;
+ letter-spacing:1px;
+}
+
+/* SPIN BUTTON */
+
+.spin-area{
+ text-align:center;
+ margin:25px 0;
+}
+
+.spin{
+ position:relative;
+ width:85%;
+ max-width:330px;
+ padding:18px;
+ border:2px solid #fff2a0;
+ border-radius:13px;
+ background:linear-gradient(180deg,#ffe77e,#ffae27);
+ color:#472507;
+ font-family:Orbitron;
+ font-weight:900;
+ font-size:19px;
+ letter-spacing:2px;
+ cursor:pointer;
+ box-shadow:
+ 0 6px 0 #965012,
+ 0 0 25px #ffbc3b77;
+ transition:transform .12s cubic-bezier(.2,.8,.2,1), box-shadow .12s ease, filter .12s ease;
+ transform-origin:center;
+ will-change:transform;
+}
+
+.spin:hover:not(:disabled){filter:brightness(1.06);transform:translateY(-2px)}
+.spin:active:not(:disabled){
+ transform:translateY(4px) scale(.94);
+ box-shadow:0 1px 0 #965012,0 0 12px #ffbc3b55;
+ filter:brightness(.96);
+}
+
+.spin:disabled{
+ opacity:.5;
+ cursor:wait;
+}
+
+/* STATS */
+
+.stats{
+ display:grid;
+ grid-template-columns:repeat(3,1fr);
+ gap:10px;
+}
+
+.stat{
+ text-align:center;
+ padding:14px 5px;
+ border:1px solid #ffffff17;
+ border-radius:13px;
+ background:linear-gradient(145deg,#22213d,#111426);
+}
+
+.stat small{
+ display:block;
+ color:#888ba9;
+ font-size:11px;
+ letter-spacing:1px;
+}
+
+.stat strong{
+ display:block;
+ font-family:Orbitron;
+ font-size:18px;
+ color:var(--gold);
+ margin-top:7px;
+}
+
+.message{
+ margin-top:18px;
+ min-height:75px;
+ padding:15px;
+ text-align:center;
+ border:1px solid #ffffff18;
+ border-radius:14px;
+ background:#ffffff08;
+}
+
+.message b{
+ font-family:Orbitron;
+ font-size:15px;
+}
+
+.message p{
+ color:#a9aac1;
+ margin:8px 0 0;
+}
+
+.footer{
+ text-align:center;
+ color:#686d8c;
+ font-size:11px;
+ margin-top:25px;
+}
+
+/* RESULT OVERLAYS */
+
+.overlay{
+ position:fixed;
+ inset:0;
+ z-index:50;
+ display:grid;
+ place-items:center;
+ padding:20px;
+ background:#060711ed;
+ backdrop-filter:blur(12px);
+ opacity:0;
+ visibility:hidden;
+ transition:.3s;
+}
+
+.overlay.show{
+ opacity:1;
+ visibility:visible;
+}
+
+.result-card{
+ position:relative;
+ width:min(100%,470px);
+ padding:35px 20px;
+ border-radius:23px;
+ text-align:center;
+ overflow:hidden;
+ opacity:0;
+ transform:translateY(22px) scale(.97);
+ transition:opacity .22s ease, transform .32s cubic-bezier(.2,.75,.25,1);
+}
+
+.overlay.show .result-card{opacity:1;transform:translateY(0) scale(1)}
+
+.win-card{
+ background:linear-gradient(145deg,#45321b,#17152b);
+ border:2px solid var(--gold);
+ box-shadow:0 0 45px #ffbd3d77;
+}
+
+.lose-card{
+ background:linear-gradient(145deg,#471526,#17101e);
+ border:2px solid var(--red);
+ box-shadow:0 0 45px #ff365d55;
+}
+
+.result-icon{
+ font-size:60px;
+ margin-bottom:15px;
+}
+
+.result-title{
+ font-family:Orbitron;
+ font-weight:900;
+ font-size:clamp(27px,8vw,43px);
+}
+
+.win-card .result-title{
+ color:var(--gold);
+ text-shadow:0 0 20px orange;
+}
+
+.lose-card .result-title{
+ color:#ff526d;
+ text-shadow:0 0 20px red;
+}
+
+.result-card p{
+ color:#ddd;
+ line-height:1.6;
+}
+
+.result-card button{
+ border:0;
+ transition:transform .12s ease,filter .12s ease;
+ transform-origin:center;
+ padding:13px 25px;
+ margin-top:15px;
+ border-radius:30px;
+ background:white;
+ font-weight:900;
+ cursor:pointer;
+}
+.result-card button:active{transform:scale(.95) translateY(2px);filter:brightness(.92)}
+
+/* LOGIN + VIRTUAL WALLET */
+.login-screen{
+ position:fixed;inset:0;z-index:100;display:grid;place-items:center;
+ padding:20px;background:radial-gradient(circle at 50% 20%,#38245f,#080914 68%);
+}
+.login-screen.hidden{display:none}
+.login-card{
+ width:min(100%,420px);padding:30px 24px;border-radius:24px;text-align:center;
+ background:linear-gradient(145deg,#292448,#101225);border:1px solid #ffcf5277;
+ box-shadow:0 0 55px #9254ff55,0 20px 60px #000b;
+}
+.login-card h2{font:900 27px Orbitron;color:var(--gold);margin:0 0 8px}
+.login-card p{color:#b7b4d0;line-height:1.5}
+.login-card input{
+ width:100%;padding:15px 16px;margin:13px 0;border-radius:12px;
+ border:1px solid #ffffff35;background:#080a18;color:white;
+ font:600 17px Rajdhani;outline:none;text-align:center
+}
+.login-card input:focus{border-color:var(--cyan);box-shadow:0 0 15px #45eaff44}
+.login-card button,.claim-btn{
+ width:100%;padding:15px;border:0;border-radius:12px;
+ background:linear-gradient(180deg,#ffe77e,#ffae27);color:#382006;
+ font:900 14px Orbitron;letter-spacing:1px;cursor:pointer;
+ box-shadow:0 5px 0 #965012,0 0 22px #ffbc3b55;
+ transition:transform .12s ease,box-shadow .12s ease,filter .12s ease;
+ transform-origin:center;
+}
+.login-card button:hover,.claim-btn:hover{filter:brightness(1.06);transform:translateY(-1px)}
+.login-card button:active,.claim-btn:active{transform:translateY(3px) scale(.96);box-shadow:0 1px 0 #965012;filter:brightness(.96)}
+.login-note{font-size:11px;color:#777b9c!important}
+.player-chip{
+ display:inline-flex;align-items:center;gap:7px;padding:7px 12px;
+ border:1px solid #45eaff55;border-radius:30px;background:#45eaff10;
+ color:#8cefff;font-size:12px;margin-top:12px
+}
+.stats{grid-template-columns:repeat(4,1fr)}
+.stat.balance strong{font-size:clamp(12px,3.2vw,17px);color:#83ffc0}
+.claim-btn{display:block;text-decoration:none;text-align:center;margin-top:12px;padding:14px 12px;border-radius:12px;font:900 12px Orbitron;letter-spacing:.4px;background:linear-gradient(180deg,#a8f7ff,#45bfff);color:#06283b;box-shadow:0 5px 0 #17648a,0 0 25px #45eaff66;transition:transform .12s ease,filter .12s ease}
+.claim-btn:active{transform:translateY(3px) scale(.96);box-shadow:0 1px #17648a}
+#winOverlay .result-card{isolation:isolate}
+/* MOTION PASS: intentional, tactile, and varied */
+button{-webkit-tap-highlight-color:transparent}
+button:focus-visible{outline:3px solid #8cefff;outline-offset:4px}
+.container{animation:page-enter .55s cubic-bezier(.2,.7,.2,1) both}
+@keyframes page-enter{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.login-card{animation:login-enter .48s cubic-bezier(.2,.8,.2,1) both}
+@keyframes login-enter{from{opacity:0;transform:translateY(18px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
+.machine{transform-origin:50% 55%;transition:filter .25s ease,transform .25s ease}
+.machine.is-spinning{filter:brightness(1.08)}
+.machine.hit-win{animation:machine-win .62s cubic-bezier(.2,.8,.2,1)}
+.machine.hit-lose{animation:machine-lose .38s ease}
+@keyframes machine-win{0%{transform:scale(1)}25%{transform:scale(1.025)}55%{transform:scale(.99)}100%{transform:scale(1)}}
+@keyframes machine-lose{0%,100%{transform:translateX(0)}20%{transform:translateX(-5px)}45%{transform:translateX(4px)}70%{transform:translateX(-2px)}}
+.reel{transition:filter .15s ease,box-shadow .2s ease}
+.reel.spinning{animation:reel-roll .11s linear infinite}
+@keyframes reel-roll{0%{transform:translateY(-3px);filter:blur(1.5px)}50%{transform:translateY(3px);filter:blur(2.5px)}100%{transform:translateY(-3px);filter:blur(1.5px)}}
+.reel.reel-stop{animation:reel-stop .34s cubic-bezier(.16,1.25,.3,1)}
+@keyframes reel-stop{0%{transform:translateY(-13px) scaleY(.92);filter:blur(2px)}58%{transform:translateY(3px) scaleY(1.04);filter:blur(0)}78%{transform:translateY(-2px)}100%{transform:translateY(0) scaleY(1)}}
+.stat{transition:transform .18s ease,border-color .18s ease,background .18s ease}
+.stat.updated{animation:stat-tick .42s ease}
+@keyframes stat-tick{0%{transform:scale(1)}35%{transform:scale(1.045);border-color:#ffcf52aa}100%{transform:scale(1)}}
+.message.pulse{animation:message-pulse .42s ease}
+@keyframes message-pulse{0%{transform:scale(1)}45%{transform:scale(1.012);border-color:#ffffff55}100%{transform:scale(1)}}
+.overlay{transition:opacity .24s ease,visibility .24s ease,backdrop-filter .24s ease}
+.overlay.show{backdrop-filter:blur(7px)}
+.win-card:before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(112deg,transparent 25%,#fff3 48%,transparent 68%);transform:translateX(-130%)}
+#winOverlay.show .win-card:before{animation:card-sheen .85s .18s ease-out}
+@keyframes card-sheen{to{transform:translateX(130%)}}
+.result-icon{display:inline-block;transform-origin:50% 60%}
+#winOverlay.show .result-icon{animation:icon-win .62s .08s cubic-bezier(.2,.8,.2,1)}
+#loseOverlay.show .result-icon{animation:icon-lose .42s ease}
+@keyframes icon-win{0%{transform:rotate(-14deg) scale(.7)}55%{transform:rotate(8deg) scale(1.16)}100%{transform:rotate(0) scale(1)}}
+@keyframes icon-lose{0%{transform:scale(1)}30%{transform:scale(1.18) rotate(-8deg)}65%{transform:scale(.94) rotate(5deg)}100%{transform:scale(1) rotate(0)}}
+#winOverlay.show .result-title{animation:title-arrive .46s .12s both}
+#loseOverlay.show .result-title{animation:title-jolt .34s .08s both}
+@keyframes title-arrive{from{opacity:0;transform:translateY(9px);letter-spacing:.08em}to{opacity:1;transform:translateY(0);letter-spacing:0}}
+@keyframes title-jolt{0%{opacity:0;transform:translateX(-8px)}55%{opacity:1;transform:translateX(3px)}100%{transform:translateX(0)}}
+.burst-particle{position:fixed;z-index:61;left:50%;top:50%;width:var(--s);height:var(--s);pointer-events:none;opacity:0;background:var(--c);border-radius:var(--shape,2px);box-shadow:0 0 9px var(--c);animation:burst-out var(--t,.7s) cubic-bezier(.12,.7,.2,1) forwards}
+@keyframes burst-out{0%{opacity:0;transform:translate(-50%,-50%) scale(.25) rotate(0)}12%{opacity:1}100%{opacity:0;transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(.15) rotate(var(--rot))}}
+.spin:disabled{filter:grayscale(.25);transform:none;box-shadow:0 3px 0 #65451d}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+
+@media(max-width:420px){
+ .stats{grid-template-columns:repeat(2,1fr)}
+ .login-card{padding:25px 18px}
+}
+
+@media(max-width:380px){
+ .reel{height:90px}
+ .machine-inner{padding:17px 10px}
+}
+
+/* === ARCADE VISUAL PASS: depth, lighting, tactile controls === */
+body{
+ background-color:#17264a;
+ background-image:linear-gradient(180deg,rgba(8,19,43,.08) 0%,rgba(8,19,43,.22) 48%,rgba(7,15,34,.56) 100%),url('olympus-bg.png');
+ background-position:center top;
+ background-size:cover;
+ background-attachment:fixed;
+ background-repeat:no-repeat;
+}
+body:after{content:none}
+.container{position:relative;z-index:1;padding-top:18px}
+.topbar{padding:12px 14px 16px;border:1px solid #ffffff19;border-radius:16px;background:linear-gradient(100deg,#ffffff10,#ffffff03);box-shadow:0 12px 30px #0005,inset 0 1px #ffffff18}
+.logo{text-shadow:0 0 18px #ffca5c66;letter-spacing:2px}
+.hero{position:relative;padding-top:30px}
+.hero:before{content:"";position:absolute;width:230px;height:110px;left:50%;top:15px;transform:translateX(-50%);background:#ffd97822;filter:blur(48px);z-index:-1}
+.hero h1{letter-spacing:2px;filter:drop-shadow(0 5px 16px #ffb52d88)}
+.badge{box-shadow:0 0 18px #9c55ff25,inset 0 0 14px #9c55ff12}
+.machine{position:relative;padding:8px;border-radius:27px;background:linear-gradient(135deg,#fff0a4,#a85aff 17%,#252d62 43%,#10142b 62%,#ffb83e);box-shadow:0 0 0 1px #ffffff3b,0 0 25px #a05aff77,0 0 65px #6736aa44,0 25px 55px #000c}
+.machine-inner{position:relative;overflow:hidden;background:radial-gradient(ellipse at 50% 0%,#60458a66,transparent 45%),linear-gradient(145deg,#292447,#111528 58%,#201637);box-shadow:inset 0 1px #ffffff22,inset 0 -18px 35px #05071388}
+.machine-inner:after{content:"";position:absolute;left:-40%;top:0;width:35%;height:100%;background:linear-gradient(90deg,transparent,#ffffff0c,transparent);transform:skewX(-18deg);pointer-events:none;animation:cabinet-glint 6s ease-in-out infinite}
+@keyframes cabinet-glint{0%,65%{left:-40%}100%{left:130%}}
+.machine-title{text-shadow:0 0 13px #ffcf5288}
+.machine-label{padding:5px 8px;border-radius:6px;background:#45eaff0d;border:1px solid #45eaff25}
+.lights{gap:clamp(8px,3vw,14px)}
+.light{box-shadow:0 0 8px #ffd45b,0 0 18px #ffd45b99}
+.reels{position:relative;gap:clamp(6px,2vw,11px);padding:12px;border:2px solid #b5b9ed55;background:linear-gradient(180deg,#050713,#10152a 50%,#050713);box-shadow:inset 0 8px 20px #000c,inset 0 -5px 15px #a2b7ff18,0 0 20px #45eaff22}
+.reels:before,.reels:after{content:"";position:absolute;left:10px;right:10px;height:1px;z-index:2;pointer-events:none;background:linear-gradient(90deg,transparent,#ffffff88,transparent)}
+.reels:before{top:10px}.reels:after{bottom:10px}
+.reel{position:relative;overflow:hidden;border:1px solid #ffffffbb;background:linear-gradient(180deg,#aab1c9,#fff 18%,#f8f8ff 50%,#d6daed 83%,#8f97b7);box-shadow:inset 0 4px 9px #fff,inset 0 -8px 12px #656d9633,0 4px 12px #0008}
+.reel:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,#fff9,transparent 22%,transparent 78%,#34395b22)}
+.reel.spinning{filter:brightness(1.12) saturate(1.2)}
+.spin-area{margin-top:27px;margin-bottom:24px}
+.spin{position:relative;border:1px solid #fff8c6;border-radius:16px;background:linear-gradient(180deg,#fff2a0,#ffd04c 38%,#f49a20);box-shadow:0 7px 0 #87450f,0 11px 25px #0008,0 0 30px #ffbd3b66,inset 0 1px #fff;text-shadow:0 1px #fff9;transition:transform .12s ease,filter .15s ease,box-shadow .15s ease}
+.spin:before{content:"";position:absolute;inset:3px;border-radius:12px;border:1px solid #ffffff77;pointer-events:none}
+.spin:hover:not(:disabled){filter:brightness(1.1);transform:translateY(-3px);box-shadow:0 10px 0 #87450f,0 14px 30px #0008,0 0 38px #ffbd3b88}
+.spin:active:not(:disabled){transform:translateY(5px) scale(.965);box-shadow:0 2px 0 #87450f,0 4px 12px #0008}
+.stat{position:relative;overflow:hidden;border:1px solid #ffffff20;background:linear-gradient(145deg,#292747,#171a31 65%,#121426);box-shadow:0 8px 20px #0005,inset 0 1px #ffffff12}
+.stat:before{content:"";position:absolute;left:0;top:0;width:100%;height:2px;background:linear-gradient(90deg,transparent,#a68bff,transparent);opacity:.8}
+.stat.balance{background:linear-gradient(145deg,#163e43,#172c39 65%,#121a2c);border-color:#83ffc055}
+.stat.balance:before{background:linear-gradient(90deg,transparent,#83ffc0,transparent)}
+.stat strong{text-shadow:0 0 12px #ffcf5255}
+.message{position:relative;overflow:hidden;background:linear-gradient(120deg,#ffffff10,#a855ff0d,#45eaff0b);border:1px solid #ffffff25;box-shadow:0 12px 28px #0004,inset 0 1px #ffffff0b}
+.message:before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(#ffcf52,#a855ff,#45eaff)}
+.login-screen{background:linear-gradient(180deg,rgba(7,17,39,.28),rgba(7,15,34,.62)),url("olympus-bg.png") center/cover no-repeat}
+.login-card{position:relative;overflow:hidden;background:radial-gradient(ellipse at 50% 0%,#60458a66,transparent 55%),linear-gradient(145deg,#292448,#101225);box-shadow:0 0 0 5px #ffffff06,0 0 65px #9254ff66,0 25px 70px #000c,inset 0 1px #ffffff22}
+.login-card:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(120deg,transparent 25%,#ffffff0a 50%,transparent 70%);transform:translateX(-100%);animation:login-shine 4.5s ease-in-out infinite}
+@keyframes login-shine{0%,65%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+@media(max-width:420px){.container{padding-left:13px;padding-right:13px}.stat{padding:13px 4px}}
+
+
+/* VIDEO STAGE */
+.machine-stage{position:relative;margin-top:6px;padding-top:0}
+.video-panel{position:relative;height:clamp(285px,82vw,340px);margin:0 12px -28px;overflow:hidden;display:flex;align-items:center;justify-content:center;border-radius:20px 20px 8px 8px;border:1px solid #8c76d944;background:linear-gradient(180deg,#111a29,#090e18);box-shadow:0 14px 30px #0007;isolation:isolate}
+.video-panel video{width:auto;height:100%;max-width:100%;display:block;object-fit:contain;object-position:center top;opacity:1}
+.video-shade{position:absolute;inset:0;background:linear-gradient(180deg,#08091400 60%,#08091435 100%);pointer-events:none}
+.machine-stage>.machine{z-index:2}
+.reel.seven{color:#f01835!important;font-weight:1000!important;text-shadow:0 2px 0 #650817,0 0 15px #ff253f55!important}
+.topup-panel{margin:16px 0 0;padding:16px;border:1px solid #45eaff44;border-radius:16px;background:linear-gradient(135deg,#102d3c,#17152e 70%);text-align:center;box-shadow:0 10px 25px #0005}
+.topup-panel h3{margin:0 0 5px;font:900 14px Orbitron;color:#8cefff}
+.topup-panel p{margin:0 0 12px;color:#aeb6d1;font-size:13px}
+.topup-panel button{border:1px solid #a8f7ff;border-radius:10px;padding:12px 18px;background:linear-gradient(180deg,#a8f7ff,#45bfff);color:#06283b;font:900 12px Orbitron;box-shadow:0 4px 0 #17648a;transition:transform .12s,filter .12s}
+.topup-panel button:active{transform:translateY(3px) scale(.97);filter:brightness(.94);box-shadow:0 1px 0 #17648a}
+
+
+/* OLYMPUS THEME */
+.topbar,.hero,.stats,.message,.topup-panel{position:relative}
+.topbar{border-bottom-color:#f6dfb34d}
+.hero h1{font-size:clamp(30px,8vw,49px);letter-spacing:1px;text-shadow:0 3px 22px #182b55}
+.hero p{color:#e0e8ff;text-shadow:0 2px 8px #101a36}
+.badge{border-color:#f6d58c99;color:#ffe6ad;background:#17294d77}
+.machine,.stat,.message,.topup-panel{backdrop-filter:blur(8px)}
+.stat{background:linear-gradient(145deg,#1d3150e8,#111b32ed);border-color:#e8d39b55}
+.message{background:#101c35c9;border-color:#e8d39b55}
+.topup-panel{background:#142342d9;border:1px solid #e8d39b66;border-radius:16px;padding:18px;margin-top:18px;box-shadow:0 12px 28px #07112666}
+.login-screen{background:linear-gradient(180deg,#101e3bcc,#080e20eF),url('olympus-bg.png') center/cover}
+.footer{color:#d6def4;text-shadow:0 2px 8px #101a36}
+
+</style>
+</head>
+
+<body>
+
+<div class="login-screen" id="loginScreen">
+ <div class="login-card">
+  <div style="font-size:42px;margin-bottom:12px">⚡🪙⚡</div>
+  <h2>FARIH777 OLYMPUS</h2>
+  <p>MASUK KE ARCADE<br>Masukkan nama pemain untuk memulai.</p>
+  <form id="loginForm">
+   <input id="nameInput" type="text" maxlength="18" placeholder="Nama pemain..." autocomplete="nickname" required>
+   <button type="submit">MASUK KE GAME</button>
+  </form>
+  <p class="login-note">30.000 poin arcade gratis • Tidak ada uang asli.</p>
+ </div>
+</div>
+
+<div class="container">
+
+ <div class="topbar">
+  <div class="logo">FARIH777 OLYMPUS</div>
+  <div class="live">● SLOT GACOR</div>
+ </div>
+
+ <header class="hero">
+  <h1>FARIH777 OLYMPUS</h1>
+  <p>KINGDOM ABOVE THE CLOUDS</p>
+  <span class="badge">✦ OLYMPUS ARCADE ✦</span>
+  <div class="player-chip" id="playerChip" style="display:none">PLAYER: <b id="playerNameLabel">---</b></div>
+ </header>
+
+ <section class="machine-stage">
+  <div class="video-panel">
+   <video id="stageVideo" autoplay muted loop playsinline preload="metadata" aria-label="Video latar mesin arcade">
+    <source src="1000121195.mp4" type="video/mp4">
+   </video>
+   <div class="video-shade"></div>
+  </div>
+  <section class="machine">
+  <div class="machine-inner">
+
+   <div class="machine-top">
+    <div class="machine-title">777 MACHINE</div>
+    <div class="machine-label">NO REAL MONEY</div>
+   </div>
+
+   <div class="lights">
+    <i class="light"></i><i class="light"></i>
+    <i class="light"></i><i class="light"></i>
+    <i class="light"></i><i class="light"></i>
+    <i class="light"></i>
+   </div>
+
+   <div class="reels">
+    <div class="reel seven" id="r1">7</div>
+    <div class="reel seven" id="r2">7</div>
+    <div class="reel seven" id="r3">7</div>
+   </div>
+
+   <div class="machine-bottom">
+    <span>LUCKY SPIN</span>
+    <span>777 • ★ • ⭐⭐⭐</span>
+   </div>
+
+  </div>
+  </section>
+ </section>
+
+ <div class="spin-area">
+  <button class="spin" id="spin">▶ SPIN NOW</button>
+ </div>
+
+ <section class="stats">
+  <div class="stat balance">
+   <small>POIN ARCADE</small>
+   <strong id="balance">30.000</strong>
+  </div>
+  <div class="stat">
+   <small>PUTARAN</small>
+   <strong id="count">0</strong>
+  </div>
+  <div class="stat">
+   <small>MENANG</small>
+   <strong id="wins">0</strong>
+  </div>
+  <div class="stat">
+   <small>KALAH</small>
+   <strong id="losses">0</strong>
+  </div>
+ </section>
+
+ <section class="topup-panel">
+  <h3>ISI ULANG POIN GRATIS</h3>
+  <p>Isi ulang 30.000 poin untuk lanjut bermain. Tidak ada pembayaran atau taruhan.</p>
+  <button type="button" id="topupBtn">+ ISI ULANG 30.000 POIN</button>
+ </section>
+
+ <div class="message" id="message">
+  <b>WELCOME TO FARIH777 OLYMPUS</b>
+  <p>Tekan tombol untuk memulai permainan.</p>
+ </div>
+
+ <div class="footer">
+  FARIH777 OLYMPUS ARCADE © 2026<br>
+  ARCADE POINTS • GRATIS • TANPA UANG ASLI
+ </div>
+
+</div>
+
+<!-- WIN SCREEN -->
+
+<div class="overlay" id="winOverlay">
+ <div class="result-card win-card">
+  <div class="result-icon">⚡🪙⚡</div>
+  <div class="result-title">777 JACKPOT!</div>
+  <p>
+   ANDA WD! GAS JUAL RUMAH?!<br>
+   <b>INI JACKPOT VIRTUAL 😭</b><br>
+   Kamu mendapat bonus 5.000 poin arcade!
+  </p>
+  <p class="login-note">Poin hanya untuk permainan lokal. Tidak bisa diuangkan atau ditukar.</p>
+  <a class="claim-btn" id="claimVirtualBtn" href="https://wa.me/?text=%5F%2ASAYA%20JACKPOT%20POIN%20VIRTUAL%20DI%20FARIH777%2C%20GAS%20LIHAT%20HASILNYA%20BOS%20%F0%9F%94%A5%2A%5F" target="_blank" rel="noopener">KLAIM JACKPOT POIN VIA WA</a>
+  <button onclick="closeOverlay('winOverlay')" style="background:#ffffff18;color:white;box-shadow:none">
+   TUTUP
+  </button>
+ </div>
+</div>
+
+<!-- LOSE SCREEN -->
+
+<div class="overlay" id="loseOverlay">
+ <div class="result-card lose-card">
+  <div class="result-icon">💥</div>
+  <div class="result-title">GAME OVER!</div>
+  <p id="loseText">
+   ZONK TOTAL!<br>
+   Keberuntungan sedang tidak tersedia.
+  </p>
+  <button onclick="closeOverlay('loseOverlay')">
+   COBA LAGI
+  </button>
+ </div>
+</div>
+
+
+<script>
+const reels=[
+ document.getElementById("r1"),
+ document.getElementById("r2"),
+ document.getElementById("r3")
+];
+
+const spinBtn=document.getElementById("spin");
+const symbols=["7","7","7","★","🍒","⭐⭐⭐","A","K","9"];
+
+let audioCtx;
+let busy=false;
+let total=0;
+let wins=0;
+let losses=0;
+let balance=30000;
+let playerName="";
+const SPIN_COST=1000;
+const VIRTUAL_PRIZE=5000;
+
+const balanceEl=document.getElementById("balance");
+function updateBalance(){
+ balanceEl.textContent=balance.toLocaleString("id-ID");
+}
+document.getElementById("loginForm").addEventListener("submit",function(e){
+ e.preventDefault();
+ const value=document.getElementById("nameInput").value.trim();
+ if(!value)return;
+ playerName=value;
+ document.getElementById("playerNameLabel").textContent=playerName;
+ document.getElementById("playerChip").style.display="inline-flex";
+ document.getElementById("loginScreen").classList.add("hidden");
+ document.getElementById("message").innerHTML="<b>WELCOME, "+escapeHTML(playerName.toUpperCase())+"!</b><p>30.000 poin arcade gratis sudah siap.</p>";
+});
+function escapeHTML(str){
+ return str.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+
+
+const topupBtn=document.getElementById("topupBtn");
+topupBtn.addEventListener("click",()=>{
+ if(busy)return;
+ balance+=30000;
+ updateBalance();
+ pulseElement(document.querySelector(".stat.balance"));
+ document.getElementById("message").innerHTML="<b style=\"color:#8cefff\">POIN BERHASIL DIISI ULANG</b><p>+30.000 poin arcade gratis ditambahkan.</p>";
+ topupBtn.textContent="+ ISI ULANG 30.000 POIN";
+});
+
+const stageVideo=document.getElementById("stageVideo");
+// Isi nomor WA milik pemilik situs dengan format internasional tanpa tanda +.
+// Contoh format: 62812xxxxxxxx
+const WA_NUMBER = "ISI_NOMOR_WA_KAMU";
+const claimLink = document.getElementById("claimVirtualBtn");
+const claimMessage = "*_SAYA JACKPOT POIN VIRTUAL DI FARIH777 OLYMPUS, SEGERA CEK HASIL SAYA BOS 🔥_*";
+claimLink.href = "https://wa.me/" + (WA_NUMBER === "ISI_NOMOR_WA_KAMU" ? "" : WA_NUMBER) + "?text=" + encodeURIComponent(claimMessage);
+
+function audio(){
+ if(!audioCtx){
+  audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+ }
+ if(audioCtx.state==="suspended")audioCtx.resume();
+ return audioCtx;
+}
+
+function tone(freq,duration,type="sine",volume=.05,delay=0){
+ const ctx=audio();
+ const osc=ctx.createOscillator();
+ const gain=ctx.createGain();
+ const now=ctx.currentTime+delay;
+
+ osc.type=type;
+ osc.frequency.setValueAtTime(freq,now);
+
+ gain.gain.setValueAtTime(.0001,now);
+ gain.gain.exponentialRampToValueAtTime(volume,now+.01);
+ gain.gain.exponentialRampToValueAtTime(.0001,now+duration);
+
+ osc.connect(gain);
+ gain.connect(ctx.destination);
+ osc.start(now);
+ osc.stop(now+duration+.02);
+}
+
+// Spin seperti koin berputar: bunyi metalik pendek yang makin rapat saat melambat.
+function spinSound(){
+ let elapsed=0;
+ let index=0;
+ while(elapsed<2.65){
+  const progress=elapsed/2.65;
+  const interval=.145-(progress*.092);
+  const pitch=1480+(index%5)*115-(progress*170);
+  tone(pitch,.032,"sine",.027,elapsed);
+  if(index%3===0)tone(pitch*1.48,.022,"triangle",.012,elapsed+.008);
+  elapsed+=interval;
+  index++;
+ }
+ tone(1180,.075,"sine",.038,2.62);
+}
+function startRotationSound(){ /* suara koin sudah dijadwalkan oleh spinSound */ }
+function stopRotationSound(){ /* tidak ada suara berkelanjutan yang perlu dihentikan */ }
+function coinTick(){tone(1480,.045,"sine",.045);tone(2210,.055,"triangle",.025,.018)}
+function stopSound(i){tone(620+i*115,.075,"triangle",.045);tone(1620,.045,"sine",.028,.018)}
+function coinSound(){
+ for(let i=0;i<24;i++){
+  const notes=[1046,1318,1568,2093,1760];
+  tone(notes[i%notes.length],.15,"sine",.075,i*.06);
+ }
+}
+
+// WIN SOUND
+function winSound(){
+ [523,659,784,1047,1319,1568].forEach((f,i)=>{
+  tone(f,.25,"triangle",.065,i*.13);
+ });
+}
+
+// LOSE SOUND
+function loseSound(){
+ [420,330,245,165].forEach((f,i)=>{
+  tone(f,.22,"sawtooth",.035,i*.16);
+ });
+}
+
+function closeOverlay(id){
+ const panel=document.getElementById(id);
+ panel.classList.remove("show");
+}
+
+function burstParticles(kind="win"){
+ const colors=kind==="win"?["#ffdc72","#fff1b5","#f5a623","#ffffff"]:["#ff526d","#ff9aaa","#b51e45"];
+ const count=kind==="win"?22:13;
+ for(let i=0;i<count;i++){
+  const particle=document.createElement("i");
+  particle.className="burst-particle";
+  const angle=(Math.PI*2*i/count)+(Math.random()-.5)*.22;
+  const distance=(kind==="win"?85:65)+Math.random()*(kind==="win"?115:95);
+  particle.style.setProperty("--dx",Math.cos(angle)*distance+"px");
+  particle.style.setProperty("--dy",Math.sin(angle)*distance+"px");
+  particle.style.setProperty("--s",(3+Math.random()*5)+"px");
+  particle.style.setProperty("--c",colors[Math.floor(Math.random()*colors.length)]);
+  particle.style.setProperty("--rot",(Math.random()*300-150)+"deg");
+  particle.style.setProperty("--t",(.48+Math.random()*.32)+"s");
+  particle.style.setProperty("--shape",kind==="win"?(Math.random()>.5?"50%":"1px"):"0");
+  document.body.appendChild(particle);
+  setTimeout(()=>particle.remove(),900);
+ }
+}
+
+function pulseElement(el){
+ el.classList.remove("updated","pulse");
+ void el.offsetWidth;
+ el.classList.add(el.classList.contains("stat")?"updated":"pulse");
+}
+
+function showWin(){
+ const machine=document.querySelector(".machine");
+ machine.classList.remove("is-spinning","hit-lose");
+ void machine.offsetWidth;
+ machine.classList.add("hit-win");
+ document.getElementById("winOverlay").classList.add("show");
+ burstParticles("win");
+ coinSound();
+ winSound();
+}
+
+function showLose(){
+ const messages=[
+  "ZONK TOTAL.<br>Keberuntungan sedang cuti.",
+  "777-NYA KABUR.<br>Angkanya tidak mau bekerja sama.",
+  "GAME OVER.<br>Mesin sedang menertawakanmu.",
+  "SERVER ERROR.<br>Keberuntungan tidak ditemukan."
+ ];
+ document.getElementById("loseText").innerHTML=messages[Math.floor(Math.random()*messages.length)];
+ const machine=document.querySelector(".machine");
+ machine.classList.remove("is-spinning","hit-win");
+ void machine.offsetWidth;
+ machine.classList.add("hit-lose");
+ document.getElementById("loseOverlay").classList.add("show");
+ burstParticles("lose");
+ loseSound();
+}
+
+// MAIN GAME
+spinBtn.onclick=async()=>{
+ if(busy)return;
+ if(!playerName){
+  document.getElementById("loginScreen").classList.remove("hidden");
+  return;
+ }
+ if(balance<SPIN_COST){
+  document.getElementById("message").innerHTML="<b style='color:#ffcf52'>POIN HABIS!</b><p>Tekan tombol isi ulang gratis di bawah untuk mendapatkan 30.000 poin lagi.</p>";
+  document.getElementById("topupBtn").animate([{transform:"scale(1)"},{transform:"scale(1.06)"},{transform:"scale(1)"}],{duration:420});
+  return;
+ }
+
+ balance-=SPIN_COST;
+ updateBalance();
+ busy=true;
+ spinBtn.disabled=true;
+ spinBtn.textContent="SPINNING...";
+ document.querySelector(".machine").classList.add("is-spinning");
+
+ audio();
+ total++;
+
+ document.getElementById("count").textContent=total;
+
+ document.getElementById("message").innerHTML=
+ "<b>ROLLING THE REELS...</b><p>Good luck!</p>";
+
+ reels.forEach(r=>{r.classList.remove("reel-stop");r.classList.add("spinning")});
+
+ const win=Math.random()<.16;
+
+ let result=win
+ ?["7","7","7"]
+ :Array.from({length:3},()=>symbols[
+  Math.floor(Math.random()*symbols.length)
+ ]);
+
+ if(!win&&result.every(x=>x==="7"))result[2]="★";
+
+ const duration=[1400,2000,2600];
+
+ spinSound();
+ startRotationSound();
+
+ for(let i=0;i<3;i++){
+  const start=Date.now();
+
+  while(Date.now()-start<duration[i]){
+   const rollingSymbol=symbols[Math.floor(Math.random()*symbols.length)];
+   reels[i].textContent=rollingSymbol;
+   reels[i].classList.toggle("seven",rollingSymbol==="7");
+
+   await new Promise(r=>setTimeout(r,75));
+  }
+
+  reels[i].textContent=result[i];
+  reels[i].classList.toggle("seven",result[i]==="7");
+  reels[i].classList.remove("spinning");
+  reels[i].classList.remove("reel-stop");
+  void reels[i].offsetWidth;
+  reels[i].classList.add("reel-stop");
+
+  stopSound(i);
+  if(i===2)stopRotationSound();
+
+  await new Promise(r=>setTimeout(r,180));
+ }
+
+ if(win){
+  balance+=VIRTUAL_PRIZE;
+  updateBalance();
+  pulseElement(document.querySelector(".stat.balance"));
+  wins++;
+  document.getElementById("wins").textContent=wins;
+  pulseElement(document.getElementById("wins").parentElement);
+
+  document.getElementById("message").innerHTML=
+   "<b style='color:#ffd45b'>JACKPOT 777!</b><p>YOU ARE THE CHAMPION!</p>";
+
+  showWin();
+
+ }else{
+  losses++;
+  document.getElementById("losses").textContent=losses;
+  pulseElement(document.getElementById("losses").parentElement);
+
+  document.getElementById("message").innerHTML=
+   "<b style='color:#ff526d'>BETTER LUCK NEXT TIME!</b><p>Try again!</p>";
+
+  showLose();
+ }
+
+ stopRotationSound();
+ document.querySelector(".machine").classList.remove("is-spinning");
+ spinBtn.disabled=false;
+ spinBtn.textContent="▶ SPIN AGAIN";
+ pulseElement(document.getElementById("message"));
+ busy=false;
+};
+</script>
+
+</body>
+</html>
